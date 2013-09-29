@@ -11,14 +11,14 @@
       Sinatra Boilerplate
 
     -# Bootstrap core CSS
-    %link{:href => 'http://getbootstrap.com/dist/css/bootstrap.css', :rel => 'stylesheet'}
+    %link{:href => '/stylesheets/bootstrap.min.css', :rel => 'stylesheet'}
     -# Custom styles for this template
-    %link{:href => 'http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css', :rel => 'stylesheet'}
+    %link{:href => '/stylesheets/jumbotron-narrow.css', :rel => 'stylesheet'}
     
     -# HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries 
     /[if lt IE 9]
-      %script{:src => '../../assets/js/html5shiv.js'}
-      %script{:src => '../../assets/js/respond.min.js'}
+      %script{:src => '/javascripts/ie/html5shiv.js'}
+      %script{:src => '/javascripts/ie/respond.min.js'}
   %body
     .container
       .header
@@ -33,7 +33,7 @@
             %a{:href => "./Narrow Jumbotron Template for Bootstrap_files/Narrow Jumbotron Template for Bootstrap.html"}
               Contact
         %h3.text-muted
-          Neigel Vintners
+          Sinatra Boilerplate
 
       .jumbotron
         %h1 
@@ -71,6 +71,8 @@
 
       .footer
         %p © Company 2013
-
     -# Bootstrap core JavaScript
     -# Placed at the end of the document so the pages load faster
+    %script{:src => '/javascripts/jquery-2.0.3.min.js'}
+    %script{:src => '/javascripts/bootstrap.min.js'}
+
