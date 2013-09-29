@@ -19,5 +19,6 @@ PLATFORMS
 
 DEPENDENCIES
   haml
+  rack
   shotgun
   sinatra
