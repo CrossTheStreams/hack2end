@@ -8,7 +8,7 @@
     %link{:rel => 'shortcut icon', :href => 'http://getbootstrap.com/assets/ico/favicon.png'}
 
     %title
-      Sinatra Boilerplate
+      Neigel Vintners 
 
     -# Bootstrap core CSS
     %link{:href => '/stylesheets/bootstrap.min.css', :rel => 'stylesheet'}
@@ -24,22 +24,22 @@
       .header
         %ul.nav.nav-pills.pull-right
           %li.active
-            %a{:href => "./Narrow Jumbotron Template for Bootstrap_files/Narrow Jumbotron Template for Bootstrap.html"}
+            %a{:href => '/'}
               Home
           %li 
-            %a{:href => "./Narrow Jumbotron Template for Bootstrap_files/Narrow Jumbotron Template for Bootstrap.html"}
+            %a{:href => '/about'}
               About
           %li
-            %a{:href => "./Narrow Jumbotron Template for Bootstrap_files/Narrow Jumbotron Template for Bootstrap.html"}
+            %a{:href => '/contact'} 
               Contact
         %h3.text-muted
-          Sinatra Boilerplate
+          Neigel Vintners 
 
       .jumbotron
         %h1 
           Jumbotron heading
           %p.lead
-            Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+            Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
 
       .row.marketing
         .col-lg-6
@@ -70,7 +70,10 @@
             Maecenas sed diam eget risus varius blandit sit amet non magna.
 
       .footer
-        %p © Company 2013
+        %p © Neigel Vintners #{Date.today.year}
+        %p 
+          %a{:href => 'http://hautaulogy.com', :target => '_blank'} Made by this crazy person.
+          
     -# Bootstrap core JavaScript
     -# Placed at the end of the document so the pages load faster
     %script{:src => '/javascripts/jquery-2.0.3.min.js'}
