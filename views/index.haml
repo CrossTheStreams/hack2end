@@ -6,9 +6,10 @@
     %meta{:name =>'description', :content => ''}
     %meta{:name => 'author', :content => ''}
     %link{:rel => 'shortcut icon', :href => 'http://getbootstrap.com/assets/ico/favicon.png'}
-
+    %link{:href => "https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css", :rel => 'stylesheet'}
+    %link{:rel => 'stylesheet', :href => '/stylesheets/hack2end.css'}
     %title
-      Sinatra Boilerplate
+      #Hack2End
 
     -# Bootstrap core CSS
     %link{:href => '/stylesheets/bootstrap.min.css', :rel => 'stylesheet'}
@@ -20,7 +21,7 @@
       %script{:src => '/javascripts/ie/html5shiv.js'}
       %script{:src => '/javascripts/ie/respond.min.js'}
   %body
-    .container
+    .container{:style => 'max-width:none !important;'}
       .header
         %ul.nav.nav-pills.pull-right
           %li.active
@@ -32,14 +33,10 @@
           %li
             %a{:href => '/contact'} 
               Contact
-        %h3.text-muted
-          Sinatra Boilerplate
+        %h3.text-muted 
+          \#Hack2End
 
-      .jumbotron
-        %h1 
-          Jumbotron heading
-          %p.lead
-            Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+      #map-canvas.jumbotron
 
       .row.marketing
         .col-lg-6
@@ -78,4 +75,6 @@
     -# Placed at the end of the document so the pages load faster
     %script{:src => '/javascripts/jquery-2.0.3.min.js'}
     %script{:src => '/javascripts/bootstrap.min.js'}
+    %script{:src => "https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js" }
+    %script{:src => "/javascripts/hack2end.js"}
 
