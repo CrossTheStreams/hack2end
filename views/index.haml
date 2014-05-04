@@ -8,6 +8,7 @@
     %link{:rel => 'shortcut icon', :href => 'http://getbootstrap.com/assets/ico/favicon.png'}
     %link{:href => "https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css", :rel => 'stylesheet'}
     %link{:rel => 'stylesheet', :href => '/stylesheets/hack2end.css'}
+    %link{:rel => 'stylesheet', :href => '/stylesheets/c3.css'}
     %title
       \#Hack2End
     -# Bootstrap core CSS
@@ -34,8 +35,9 @@
               Contact
         %h3.text-muted 
           \#Hack2End
-
+      #chart.c3{:style => "max-height: 280px; position: relative;"}
       #map-canvas.jumbotron
+
 
       .row.marketing
         .col-lg-6
@@ -66,7 +68,7 @@
             Maecenas sed diam eget risus varius blandit sit amet non magna.
 
       .footer
-        %p © Neigel Vintners #{Date.today.year}
+        %p #Hack2End #{Date.today.year}
         %p 
           %a{:href => 'http://hautaulogy.com', :target => '_blank'} Made by this crazy person.
           

@@ -5,3 +5,6 @@
 .leaflet-clickable {
   cursor: pointer;
 }
+#chart {
+  height: 300px;
+}

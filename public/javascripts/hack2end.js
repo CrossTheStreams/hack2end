@@ -12,6 +12,12 @@ if (typeof Object.create != 'function') {
     })();
 }
 
+// rando color
+randoColorHex = function () {
+ return (function(m,s,c){return (c ? arguments.callee(m,s,c-1) : '#') +
+  s[m.floor(m.random() * s.length)]})(Math,'0123456789ABCDEF',5)
+}
+
 Metro = {
   layer : undefined,
   radius : 300000,
@@ -37,7 +43,7 @@ Metro = {
     }
     var avg = sum/collection.length;
 
-    var fill_value = this.data[this.current_year][this.fill_property]/avg * 0.4;
+    var fill_value = this.data[this.current_year][this.fill_property]/avg * 0.35;
 
     this.fill_value = fill_value
 
@@ -92,7 +98,7 @@ $(document).ready(function() {
 
 map_handler = {
   init_metros: function() {
-    var dictionary = JSON.parse('{"FL-600":[25.773382876628542,-80.19500255584717],"FL-507":[28.51576275598021,-81.37092590332031],"FL-501":[27.95680404117228,-82.45033264160155],"LA-503":[29.952554831950987,-90.08960723876953],"TX-700":[29.761695072417023,-95.36733627319336],"GA-500":[33.747751389895576,-84.3918228149414],"DC-500":[38.896377071814506,-77.03690528869629],"MD-501":[39.290335634075305,-76.61478996276855],"PA-500":[39.95251688800991,-75.16369342803955],"NY-600":[40.7342506899291,-73.99394989013672],"MA-500":[42.360192919586375,-71.05862617492676],"MI-501":[42.34408158403525,-83.05990219116211],"IL-510":[41.87537684702812,-87.62622356414795],"CO-503":[39.73834635103298,-104.98912811279295],"AZ-501":[31.87755764334002,-111.81884765624999],"AZ-502":[33.24787594792436,-112.60986328125],"CA-601":[32.95336814579932,-116.47705078125],"CA-600":[34.27083595165,-118.01513671875],"CA-514":[37.020098201368114,-119.77294921874999],"CA-501":[37.76854362092148,-122.43850708007811],"NV-500":[36.4566360115962,-115.07080078125],"CA-608":[33.87041555094183,-116.38916015624999],"OR-501":[45.51867686272777,-122.67587184906004],"WA-500":[47.60407971765813,-122.33319282531737],"HI-501":[21.48118513100344,-158.02597045898438]}'),
+    var dictionary = JSON.parse('{"FL-600":[25.773382876628542,-80.19500255584717],"FL-507":[28.51576275598021,-81.37092590332031],"FL-501":[27.95680404117228,-82.45033264160155],"LA-503":[29.952554831950987,-90.08960723876953],"TX-700":[29.761695072417023,-95.36733627319336],"GA-500":[33.747751389895576,-84.3918228149414],"DC-500":[38.896377071814506,-77.03690528869629],"MD-501":[39.290335634075305,-76.61478996276855],"PA-500":[39.95251688800991,-75.16369342803955],"NY-600":[40.7342506899291,-73.99394989013672],"MA-500":[42.360192919586375,-71.05862617492676],"MI-501":[42.34408158403525,-83.05990219116211],"IL-510":[41.87537684702812,-87.62622356414795],"CO-503":[39.73834635103298,-104.98912811279295],"AZ-501":[31.87755764334002,-111.81884765624999],"AZ-502":[33.24787594792436,-112.60986328125],"CA-601":[32.95336814579932,-116.47705078125],"CA-600":[34.27083595165,-118.01513671875],"CA-514":[37.020098201368114,-119.77294921874999],"CA-501":[37.76854362092148,-122.43850708007811],"NV-500":[36.4566360115962,-115.07080078125],"CA-608":[33.87041555094183,-116.38916015624999],"OR-501":[45.51867686272777,-122.67587184906004],"WA-500":[47.834707,-122.033386],"HI-501":[21.48118513100344,-158.02597045898438]}'),
     cocnums = Object.keys(dictionary),
     json_template = {
       "type": "Feature",
@@ -109,8 +115,14 @@ map_handler = {
       template.geometry.coordinates = dictionary[cocnum];
       map_handler.feature_collection.features = map_handler.feature_collection.features.concat(template);
       var metro = Object.create(Metro);
-      var circleLayer = L.circle(template.geometry.coordinates,0).addTo(map_handler.map); 
+      metro.color = randoColorHex();
+      var circleLayer = L.circle(template.geometry.coordinates,0).setStyle({color: metro.color, fillColor: 'blue',weight:15}).addTo(map_handler.map); 
       metro.layer = circleLayer;
+
+      metro.layer.on('click',function(){
+        console.log(metro.layer._mRadius);
+      })
+
       map_handler.metro_dictionary[cocnum] = metro;
       map_handler.metro_collection = map_handler.metro_collection.concat(metro);
     }
@@ -121,8 +133,7 @@ map_handler = {
         for(var i = 0; i < rows.length; i++) {
           var row = rows[i];
           if (row.year != "2013") {
-            console.log(row); 
-          //console.log(map_handler.metro_dictionary[row.coc_number].data); 
+
             if (!map_handler.metro_dictionary[row.coc_number].data) {
               map_handler.metro_dictionary[row.coc_number].data = {};
             }
@@ -137,7 +148,11 @@ map_handler = {
                 total_homeless_per_1000_pop: parseFloat(row.total_homeless_per_1000_pop), 
                 year: parseInt(row.year)};
           }
-        }
+        } 
+        
+        map_handler.animate_to_year("2007");
+        map_handler.load_chart();
+
       });
   },
   animate_to_year : function (year){
@@ -145,10 +160,49 @@ map_handler = {
     for (var i=0; i < arr.length; i++) {
       arr[i].current_year = year;
       arr[i].animate_to_style();
-      arr[i].layer.on('click',function(){
-        console.log(this._mRadius);
-      })
     }
+  },
+  load_chart: function (metro_data,timeout) {
+    if (!map_handler.chart) {
+      var chart = c3.generate({
+          bindto: "#chart",
+          data: {
+              x : 'x',
+              columns: [
+                  ['x', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01', '2015-01-01'],
+                  ['Unsheltered Per Capita', 30, 200, 100, 400, 150, 250],
+                  ['Housing Units Per Capita', 130, 100, 140, 200, 150, 50]
+              ],
+              type: 'bar'
+          },
+          axis: {
+            x: {
+                type: 'categorized' // this needed to load string x value
+            }
+          },
+          bar: {
+              width: {
+                  ratio: 0.5 // this makes bar width 50% of length between ticks
+              }
+              // or
+              //width: 100 // this makes bar width 100px
+          }
+      });
+      map_handler.chart = chart;
+    } else {
+
+      setTimeout(function () {
+        map_handler.chart.load({
+            columns: [
+                 ['x', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01', '2015-01-01'],
+                ['Unsheltered Per Capita', 30, 20, 50, 40, 60, 50],
+                ['Housing Units Per Capita', 200, 130, 90, 240, 130, 220],
+            ]
+        });
+      }, timeout);
+
+    }
+
   },
   init_map : function() { 
     this.fetch_data(function(){
