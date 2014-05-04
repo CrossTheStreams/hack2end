@@ -14,34 +14,72 @@ if (typeof Object.create != 'function') {
 
 Metro = {
   layer : undefined,
-  data : {},
   radius : 300000,
-  update_radius : function (){
+  fill_value : 0.5,
+  radius_property : "total_homeless_per_1000_pop",
+  fill_property : "total_beds_per_1000_pop",
+  current_year : "2007",
+  update_radius : function () {
+    // average total homeless across years is a little over 10 per 1000 
+        value = this.data[this.current_year][this.radius_property];
+    console.log(value);
+    // TODO: calculations for other variables
+    this.radius = value * 30000.00; 
+    console.log(this.radius);
     return this.radius;
   },
-  animate_to_radius : function () {
+  update_fill_opacity: function() { 
+    var sum = 0,
+    collection = map_handler.metro_collection;
+
+    for (var i=0; i < collection.length; i ++) {
+      sum += parseFloat(collection[i].data[this.current_year][this.fill_property]);
+    }
+    var avg = sum/collection.length;
+
+    var fill_value = this.data[this.current_year][this.fill_property]/avg * 0.4;
+
+    this.fill_value = fill_value
+
+    return this.fill_value
+    
+  },
+  animate_to_style : function () {
     var metro = this,
     oldSize = metro.layer._mRadius,
     newSize = metro.update_radius();
 
-    var abs_diff = parseInt(Math.abs(newSize - oldSize)/500);
-   
+    oldFill = metro.fill_value;
+    newFill = metro.update_fill_opacity();
 
-    function anim(i,radius) {
+    var abs_diff = parseInt(Math.abs(newSize - oldSize)/500),
+    abs_fill_diff = parseInt(Math.abs(newFill - oldFill));
+    
+    function anim(i,radius,fillValue) {
       setTimeout(function() {
         metro.layer.setRadius(radius);
+        // fillOpacity
+        metro.layer.setStyle({fillOpacity: fillValue})
         //console.log(radius);
       }, 5 * i);
     };
 
-    for (var i = 1; i <= abs_diff; ++i) {
-      var setSize;
+    for (var i = 1; i <= 200; ++i) {
+      var setSize,
+      setFill;
       if (oldSize < newSize) {
-        setSize = oldSize + (i * 500);
+        setSize = oldSize + ((i * abs_diff/200) * 500);
       } else {
-        setSize = oldSize - (i * 500); 
+        setSize = oldSize - ((i * abs_diff/200)* 500); 
       }
-      anim(i,setSize);
+
+      if (oldFill < newFill) {
+        setFill = oldFill + ((i * abs_fill_diff/200));
+      } else {
+        setFill = oldFill - ((i * abs_fill_diff/200)); 
+      }
+
+      anim(i,setSize,setFill);
     };
 
   }
@@ -74,7 +112,7 @@ map_handler = {
       var circleLayer = L.circle(template.geometry.coordinates,0).addTo(map_handler.map); 
       metro.layer = circleLayer;
       map_handler.metro_dictionary[cocnum] = metro;
-      map_handler.metro_collection =  map_handler.metro_collection.concat(metro);
+      map_handler.metro_collection = map_handler.metro_collection.concat(metro);
     }
 
     d3.csv("data/Per1000Data.csv")
@@ -82,21 +120,35 @@ map_handler = {
       .get(function(error, rows) { 
         for(var i = 0; i < rows.length; i++) {
           var row = rows[i];
-          console.log(JSON.stringify(row)); 
-          var metro = map_handler.metro_dictionary[row.coc_number];
-          if (metro) {
-            metro.data[row.year] = {city: row.city, coc_number: row.coc_number, 
-              esp_per_1000_pop: parseFloat(row.esp_per_1000_pop), 
-              population: parseInt(row.population), 
-              psh_per_1000_pop: parseFloat(row.psh_per_1000_pop), 
-              rrh_per_1000_pop: parseFloat(row.rrh_per_1000_pop), 
-              thp_per_1000_pop: parseFloat(row.thp_per_1000_pop), 
-              total_beds_per_1000_pop: parseFloat(row.total_beds_per_1000_pop), 
-              total_homeless_per_1000_pop: parseFloat(row.total_homeless_per_1000_pop), 
-              year: parseInt(row.year)};
+          if (row.year != "2013") {
+            console.log(row); 
+          //console.log(map_handler.metro_dictionary[row.coc_number].data); 
+            if (!map_handler.metro_dictionary[row.coc_number].data) {
+              map_handler.metro_dictionary[row.coc_number].data = {};
+            }
+            
+            map_handler.metro_dictionary[row.coc_number].data[row.year] = {city: row.city, coc_number: row.coc_number, 
+                esp_per_1000_pop: parseFloat(row.esp_per_1000_pop), 
+                population: parseInt(row.population), 
+                psh_per_1000_pop: parseFloat(row.psh_per_1000_pop), 
+                rrh_per_1000_pop: parseFloat(row.rrh_per_1000_pop), 
+                thp_per_1000_pop: parseFloat(row.thp_per_1000_pop), 
+                total_beds_per_1000_pop: parseFloat(row.total_beds_per_1000_pop), 
+                total_homeless_per_1000_pop: parseFloat(row.total_homeless_per_1000_pop), 
+                year: parseInt(row.year)};
           }
         }
       });
+  },
+  animate_to_year : function (year){
+    var arr = map_handler.metro_collection;
+    for (var i=0; i < arr.length; i++) {
+      arr[i].current_year = year;
+      arr[i].animate_to_style();
+      arr[i].layer.on('click',function(){
+        console.log(this._mRadius);
+      })
+    }
   },
   init_map : function() { 
     this.fetch_data(function(){
