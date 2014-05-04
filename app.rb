@@ -15,8 +15,8 @@ get '/' do
   haml :index, :format => :html5
 end
 
-get '/about' do 
-
+get '/treemap' do 
+  erb :treemap, :format => :html5
 end
 
 get '/contact' do 
