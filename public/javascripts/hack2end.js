@@ -56,13 +56,9 @@ Metro = {
       sum += parseFloat(collection[i].data[this.current_year][this.fill_property]);
     }
     var avg = sum/collection.length;
-
     var fill_value = this.data[this.current_year][this.fill_property]/avg * 0.35;
-
     this.fill_value = fill_value
-
-    return this.fill_value
-    
+    return this.fill_value  
   },
   animate_to_style : function () {
     var metro = this,
