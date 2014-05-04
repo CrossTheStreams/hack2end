@@ -278,7 +278,7 @@ map_handler = {
   },
   init_map : function() { 
     this.fetch_data(function(){
-      var map = L.mapbox.map('map-canvas','balasubr.i5dk1bj5').setView([39.50, -98.35], 4);
+      var map = L.mapbox.map('map-canvas','balasubr.i5dk1j3f').setView([39.50, -98.35], 4);
       map_handler.map = map; 
 
       map.whenReady(function(){
