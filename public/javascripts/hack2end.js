@@ -155,14 +155,17 @@ map_handler = {
       metro.layer = circleLayer;
       circleLayer.metro = metro;
 
-      metro.layer.on('mouseover',function(){
+      metro.layer.on('click',function(){
+        for (var i = 0; i < map_handler.metro_collection.length; i ++) {
+          var metro =  map_handler.metro_collection[i];
+          metro.set_layer_colors();
+        }
         this.metro.highlight_circle();
       })
 
-      metro.layer.on('mouseout',function(){
-        this.metro.set_layer_colors();
-      })
-
+      //metro.layer.on('mouseout',function(){
+        //this.metro.set_layer_colors();
+      //})
 
       map_handler.metro_dictionary[cocnum] = metro;
       map_handler.metro_collection = map_handler.metro_collection.concat(metro);
@@ -247,15 +250,19 @@ map_handler = {
       });
 
       map_handler.chart = chart;
-      d3.selectAll('rect').on('mouseover',function(d){  
+      d3.selectAll('rect').on('click',function(d){  
         //console.log(map_handler.chart_id_collection[d.x]);
+        for (var i = 0; i < map_handler.metro_collection.length; i ++) {
+          var metro =  map_handler.metro_collection[i];
+          metro.set_layer_colors();
+        }
         map_handler.metro_collection[d.x].highlight_circle()
       })
 
-      d3.selectAll('rect').on('mouseout',function(d){  
-        //console.log(map_handler.chart_id_collection[d.x]);
-        map_handler.metro_collection[d.x].set_layer_colors();
-      })
+      //d3.selectAll('rect').on('mouseout',function(d){  
+        ////console.log(map_handler.chart_id_collection[d.x]);
+        //map_handler.metro_collection[d.x].set_layer_colors();
+      //})
 
 
     } else {
