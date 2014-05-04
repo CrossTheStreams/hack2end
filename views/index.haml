@@ -26,18 +26,31 @@
         %ul.nav.nav-pills.pull-right
           %li.active
             %a{:href => '/'}
-              Home
-          %li 
-            %a{:href => '/treemap'}
-              Treemap
+              About
           %li
-            %a{:href => '/contact'} 
-              Contact
+            %a{:href => '/contact'}      
         %h3.text-muted 
           \#Hack2End
+        %nav.navbar.navbar-default.navbar-static{role: "navigation"}
+          .container-fluid
+            .navbar-header
+              %button.navbar-toggle{"data-target" => "navbar-collapse", "data-toggle" => "collapse", type: "button"}
+                %span.sr-only Toggle navigation
+                %span.icon-bar
+              %a.navbar-brand{href: "#"} Project Name
+            .collapse.navbar-collapse
+              %ul.nav.navbar-nav
+                %li.dropdown
+                  %a#drop1.dropdown-toggle{"data-toggle" => "dropdown", href: "#", role: "button"}
+                    Dropdown
+                    %b.caret
+                  %ul.dropdown-menu{"aria-labelledby" => "drop1", role: "menu"}
+                    %li{role: "presentation"}
+                      %a{href: "", role: "menuitem", tabindex: "-1"} Action
+                    %li{role: "presentation"}
+                      %a{href: "", role: "menuitem", tabindex: "-1"} Action
       #chart.c3{:style => "max-height: 280px; position: relative;"}
       #map-canvas.jumbotron
-
 
       .row.marketing
         .col-lg-6
@@ -80,4 +93,5 @@
     %script{:src => '/javascripts/c3.min.js'}
     %script{:src => "https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js" }
     %script{:src => "/javascripts/hack2end.js"}
+    %script{:src => "/javascripts/dropdown.js"}
 

@@ -22,9 +22,23 @@ Metro = {
   layer : undefined,
   radius : 300000,
   fill_value : 0.5,
-  radius_property : "total_homeless_per_1000_pop",
+  radius_property : "unsheltered_per_1000_pop",
   fill_property : "total_beds_per_1000_pop",
   current_year : "2007",
+  set_layer_colors: function() {
+    this.layer.setStyle({color: this.color, fillColor: 'blue', weight:15, fillOpacity: this.fill_value})
+  },
+  highlight_circle : function () {
+
+    var layer = this.layer,
+    coordinates = [layer._latlng.lat,layer._latlng.lng]; 
+    map_handler.map.setView(coordinates, 5, {                                                                                                             
+      pan: { animate: true },
+      zoom: { animate: true }
+    });  
+    layer.bringToFront();
+    layer.setStyle({color: 'white', fillColor: 'yellow'})
+  },
   update_radius : function () {
     // average total homeless across years is a little over 10 per 1000 
         value = this.data[this.current_year][this.radius_property];
@@ -118,21 +132,26 @@ map_handler = {
       metro.color = randoColorHex();
       var circleLayer = L.circle(template.geometry.coordinates,0).setStyle({color: metro.color, fillColor: 'blue',weight:15}).addTo(map_handler.map); 
       metro.layer = circleLayer;
+      circleLayer.metro = metro;
 
-      metro.layer.on('click',function(){
-        console.log(metro.layer._mRadius);
+      metro.layer.on('mouseover',function(){
+        this.metro.highlight_circle();
       })
+
+      metro.layer.on('mouseout',function(){
+        this.metro.set_layer_colors();
+      })
+
 
       map_handler.metro_dictionary[cocnum] = metro;
       map_handler.metro_collection = map_handler.metro_collection.concat(metro);
     }
 
-    d3.csv("data/Per1000Data.csv")
+    d3.csv("data/Per1000DataNew.csv")
       .row(function(d) { return d; })
       .get(function(error, rows) { 
         for(var i = 0; i < rows.length; i++) {
           var row = rows[i];
-          if (row.year != "2013") {
 
             if (!map_handler.metro_dictionary[row.coc_number].data) {
               map_handler.metro_dictionary[row.coc_number].data = {};
@@ -141,17 +160,16 @@ map_handler = {
             map_handler.metro_dictionary[row.coc_number].data[row.year] = {city: row.city, coc_number: row.coc_number, 
                 esp_per_1000_pop: parseFloat(row.esp_per_1000_pop), 
                 population: parseInt(row.population), 
+                unsheltered_per_1000_pop :  parseFloat(row.unsheltered_per_1000_pop),
                 psh_per_1000_pop: parseFloat(row.psh_per_1000_pop), 
                 rrh_per_1000_pop: parseFloat(row.rrh_per_1000_pop), 
                 thp_per_1000_pop: parseFloat(row.thp_per_1000_pop), 
                 total_beds_per_1000_pop: parseFloat(row.total_beds_per_1000_pop), 
                 total_homeless_per_1000_pop: parseFloat(row.total_homeless_per_1000_pop), 
                 year: parseInt(row.year)};
-          }
         } 
         
         map_handler.animate_to_year("2007");
-        map_handler.load_chart();
 
       });
   },
@@ -161,19 +179,36 @@ map_handler = {
       arr[i].current_year = year;
       arr[i].animate_to_style();
     }
+    map_handler.load_chart();
   },
-  load_chart: function (metro_data,timeout) {
+  load_chart: function (timeout) {
+    function generateColumns () {
+      var other = ['Housing Units Per Capita'],
+      unsheltered = ['Unsheltered Per Capita'],
+      xarr = ["x"],
+      idarr = ["id"];
+
+      for (var i=0; i < map_handler.metro_collection.length; i++) {
+        var metro = map_handler.metro_collection[i],
+        xarr = xarr.concat(metro.data[metro.current_year].coc_number);
+        idarr = xarr.concat(metro.data[metro.current_year].coc_number);
+        unsheltered = unsheltered.concat(metro.data[metro.current_year].unsheltered_per_1000_pop);
+        other = other.concat(metro.data[metro.current_year].total_beds_per_1000_pop);
+      }
+      map_handler.chart_id_collection = idarr;
+      return ([xarr, unsheltered, other]);
+    }
     if (!map_handler.chart) {
       var chart = c3.generate({
           bindto: "#chart",
           data: {
               x : 'x',
-              columns: [
-                  ['x', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01', '2015-01-01'],
-                  ['Unsheltered Per Capita', 30, 200, 100, 400, 150, 250],
-                  ['Housing Units Per Capita', 130, 100, 140, 200, 150, 50]
-              ],
+              id : 'id',
+              columns: generateColumns(),
               type: 'bar'
+          },
+          color: {
+            pattern: ['#f27037','#1b9bff']
           },
           axis: {
             x: {
@@ -188,16 +223,24 @@ map_handler = {
               //width: 100 // this makes bar width 100px
           }
       });
+
       map_handler.chart = chart;
+      d3.selectAll('rect').on('mouseover',function(d){  
+        //console.log(map_handler.chart_id_collection[d.x]);
+        map_handler.metro_collection[d.x].highlight_circle()
+      })
+
+      d3.selectAll('rect').on('mouseout',function(d){  
+        //console.log(map_handler.chart_id_collection[d.x]);
+        map_handler.metro_collection[d.x].set_layer_colors();
+      })
+
+
     } else {
 
       setTimeout(function () {
         map_handler.chart.load({
-            columns: [
-                 ['x', '2010-01-01', '2011-01-01', '2012-01-01', '2013-01-01', '2014-01-01', '2015-01-01'],
-                ['Unsheltered Per Capita', 30, 20, 50, 40, 60, 50],
-                ['Housing Units Per Capita', 200, 130, 90, 240, 130, 220],
-            ]
+            columns: generateColumns()
         });
       }, timeout);
 
