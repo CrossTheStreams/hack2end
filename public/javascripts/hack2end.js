@@ -23,7 +23,6 @@ Metro = {
   radius : 300000,
   fill_value : 0.5,
   radius_property : "unsheltered_per_1000_pop",
-  fill_property : "total_beds_per_1000_pop",
   current_year : "2007",
   set_layer_colors: function() {
     this.layer.setStyle({color: this.color, fillColor: 'blue', weight:15, fillOpacity: this.fill_value})
@@ -53,10 +52,10 @@ Metro = {
     collection = map_handler.metro_collection;
 
     for (var i=0; i < collection.length; i ++) {
-      sum += parseFloat(collection[i].data[this.current_year][this.fill_property]);
+      sum += parseFloat(collection[i].data[this.current_year][map_handler.fill_property]);
     }
     var avg = sum/collection.length;
-    var fill_value = this.data[this.current_year][this.fill_property]/avg * 0.35;
+    var fill_value = this.data[this.current_year][map_handler.fill_property]/avg * 0.35;
     this.fill_value = fill_value
     return this.fill_value  
   },
@@ -103,10 +102,35 @@ Metro = {
 
 $(document).ready(function() { 
   map_handler.init_map();
+
+  $("#logo").on("click",function(){
+    window.open("http://www.cehkc.org/", '_blank'); 
+  });
+
+  $("#years a").on("click", function(){
+    var year = $(this).attr("data-year");
+    map_handler.animate_to_year(year);
+    $("#selected-year .text").text(year);
+    $(this).attr("data-year");
+    $(".dropdown").removeClass("open");
+    return false;
+  });
+
+  $("#comparisons a").on("click", function(){
+    var year = map_handler.current_year;
+    var comparison = $(this).attr("data-comparison");
+    map_handler.fill_property = comparison;
+    map_handler.animate_to_year(year);
+    $("#selected-comparison .text").text(comparison);
+    $(".dropdown").removeClass("open");
+    return false;
+  });
+
 });
 
 
 map_handler = {
+  fill_property : "total_beds_per_1000_pop",
   init_metros: function() {
     var dictionary = JSON.parse('{"FL-600":[25.773382876628542,-80.19500255584717],"FL-507":[28.51576275598021,-81.37092590332031],"FL-501":[27.95680404117228,-82.45033264160155],"LA-503":[29.952554831950987,-90.08960723876953],"TX-700":[29.761695072417023,-95.36733627319336],"GA-500":[33.747751389895576,-84.3918228149414],"DC-500":[38.896377071814506,-77.03690528869629],"MD-501":[39.290335634075305,-76.61478996276855],"PA-500":[39.95251688800991,-75.16369342803955],"NY-600":[40.7342506899291,-73.99394989013672],"MA-500":[42.360192919586375,-71.05862617492676],"MI-501":[42.34408158403525,-83.05990219116211],"IL-510":[41.87537684702812,-87.62622356414795],"CO-503":[39.73834635103298,-104.98912811279295],"AZ-501":[31.87755764334002,-111.81884765624999],"AZ-502":[33.24787594792436,-112.60986328125],"CA-601":[32.95336814579932,-116.47705078125],"CA-600":[34.27083595165,-118.01513671875],"CA-514":[37.020098201368114,-119.77294921874999],"CA-501":[37.76854362092148,-122.43850708007811],"NV-500":[36.4566360115962,-115.07080078125],"CA-608":[33.87041555094183,-116.38916015624999],"OR-501":[45.51867686272777,-122.67587184906004],"WA-500":[47.834707,-122.033386],"HI-501":[21.48118513100344,-158.02597045898438]}'),
     cocnums = Object.keys(dictionary),
@@ -170,6 +194,7 @@ map_handler = {
       });
   },
   animate_to_year : function (year){
+    map_handler.current_year = year;
     var arr = map_handler.metro_collection;
     for (var i=0; i < arr.length; i++) {
       arr[i].current_year = year;
@@ -189,7 +214,7 @@ map_handler = {
         xarr = xarr.concat(metro.data[metro.current_year].coc_number);
         idarr = xarr.concat(metro.data[metro.current_year].coc_number);
         unsheltered = unsheltered.concat(metro.data[metro.current_year].unsheltered_per_1000_pop);
-        other = other.concat(metro.data[metro.current_year].total_beds_per_1000_pop);
+        other = other.concat(metro.data[metro.current_year][map_handler.fill_property]);
       }
       map_handler.chart_id_collection = idarr;
       return ([xarr, unsheltered, other]);

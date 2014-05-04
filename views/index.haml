@@ -10,7 +10,7 @@
     %link{:rel => 'stylesheet', :href => '/stylesheets/hack2end.css'}
     %link{:rel => 'stylesheet', :href => '/stylesheets/c3.css'}
     %title
-      \#Hack2End
+      \Taking Stock
     -# Bootstrap core CSS
     %link{:href => '/stylesheets/bootstrap.min.css', :rel => 'stylesheet'}
     -# Custom styles for this template
@@ -23,14 +23,21 @@
   %body
     .container{:style => 'max-width:none !important;'}
       .header
-        %ul.nav.nav-pills.pull-right
-          %li.active
-            %a{:href => '/'}
-              About
-          %li
-            %a{:href => '/contact'}      
-        %h3.text-muted 
-          \#Hack2End
+        %h3#hack-2-end.text-muted 
+          \HayStack #h2eh
+        #logo
+        .row.marketing{:style => "margin:15px;"}
+          .col-lg-6
+            %h4 
+              Haystack
+            %p 
+              HayStack is a tool to explore
+              %a{href: "https://www.onecpd.info/resource/3031/pit-and-hic-data-since-2007/", target: "_blank"}
+                Point in Time data 
+              provided by the U.S. Department of Housing and Urban Development across the 25 metro areas involved in the 
+              %a{href: "http://www.25cities.com/", target: "_blank"}
+                25 Cities Initiative
+              (Continuums of Care).
         %nav.navbar.navbar-default.navbar-static{role: "navigation"}
           .container-fluid
             .navbar-header
@@ -41,8 +48,9 @@
             .collapse.navbar-collapse
               %ul.nav.navbar-nav
                 %li.dropdown
-                  %a#drop1.dropdown-toggle{"data-toggle" => "dropdown", href: "#", role: "button"}
-                    2007
+                  %a#selected-year.dropdown-toggle{"data-toggle" => "dropdown", href: "#", role: "button"}
+                    %span.text
+                      2007
                     %b.caret
                   %ul#years.dropdown-menu{"aria-labelledby" => "drop1", role: "menu"}
                     %li{role: "presentation"}
@@ -61,7 +69,7 @@
                       %a{href: "", role: "menuitem", tabindex: "-1", data: {year:  "2013"}} 2013
               %ul.nav.navbar-nav
                 %li.dropdown
-                  %a#drop1.dropdown-toggle{"data-toggle" => "dropdown", href: "#", role: "button"}
+                  %a#selected-comparison.dropdown-toggle{"data-toggle" => "dropdown", href: "#", role: "button"}
                     Housing Units Per Capita
                     %b.caret
                   %ul#comparisons.dropdown-menu{"aria-labelledby" => "drop1", role: "menu"}
@@ -75,39 +83,15 @@
                       %a{href: "", role: "menuitem", tabindex: "-1", data: {comparison: "rrh_per_1000_pop"}} Rapid Re-Housing
                     %li{role: "presentation"}
                       %a{href: "", role: "menuitem", tabindex: "-1", data: {comparison: "thp_per_1000_pop"}} Transitional housing
+
       #chart.c3{:style => "max-height: 280px; position: relative;"}
       #map-canvas.jumbotron
-
       .row.marketing
-        .col-lg-6
-          %h4 
-            Subheading
-            %p 
-              Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.
-          %h4 
-            Subheading
-          %p 
-            Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.
-
-          %h4 Subheading
-          %p 
-            Maecenas sed diam eget risus varius blandit sit amet non magna.
-
         .col-lg-6
           %h4 Subheading
           %p  
             Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-          %h4 Subheading
-          %p 
-            Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.
-
-          %h4 Subheading
-          %p 
-            Maecenas sed diam eget risus varius blandit sit amet non magna.
-
       .footer
-        %p #Hack2End #{Date.today.year}
         %p 
           %a{:href => 'http://hautaulogy.com', :target => '_blank'} Made by this crazy person.
           

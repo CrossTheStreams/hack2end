@@ -8,3 +8,15 @@
 #chart {
   height: 300px;
 }
+#logo {
+  height: 75px;
+  width: 200px;
+  background-image: url('/images/committee.jpeg');
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-size: 200px;
+}
+#hack-2-end {
+  width:200px;
+  float:right;
+}
