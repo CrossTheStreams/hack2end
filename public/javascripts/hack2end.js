@@ -25,7 +25,7 @@ Metro = {
   radius_property : "unsheltered_per_1000_pop",
   current_year : "2007",
   set_layer_colors: function() {
-    this.layer.setStyle({color: this.color, fillColor: 'blue', weight:15, fillOpacity: this.fill_value})
+    this.layer.setStyle({color: this.color, fillColor: 'blue', weight:5, fillOpacity: this.fill_value})
   },
   highlight_circle : function () {
 
@@ -48,15 +48,8 @@ Metro = {
     return this.radius;
   },
   update_fill_opacity: function() { 
-    var sum = 0,
-    collection = map_handler.metro_collection;
-
-    for (var i=0; i < collection.length; i ++) {
-      sum += parseFloat(collection[i].data[this.current_year][map_handler.fill_property]);
-    }
-    var avg = sum/collection.length;
-    var fill_value = this.data[this.current_year][map_handler.fill_property]/avg * 0.35;
-    this.fill_value = fill_value
+    var value = parseFloat(this.data[this.current_year][map_handler.fill_property]/this.data[this.current_year][this.radius_property]);
+    this.fill_value = value; 
     return this.fill_value  
   },
   animate_to_style : function () {
@@ -151,7 +144,7 @@ map_handler = {
       var metro = Object.create(Metro);
       metro.color = '#f27037';
       //metro.color = randoColorHex();
-      var circleLayer = L.circle(template.geometry.coordinates,0).setStyle({color: metro.color, fillColor: 'blue',weight:15}).addTo(map_handler.map); 
+      var circleLayer = L.circle(template.geometry.coordinates,0).setStyle({color: metro.color, fillColor: 'blue',weight:5}).addTo(map_handler.map); 
       metro.layer = circleLayer;
       circleLayer.metro = metro;
 
