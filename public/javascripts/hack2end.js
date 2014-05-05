@@ -114,7 +114,7 @@ $(document).ready(function() {
     var comparison = $(this).attr("data-comparison");
     map_handler.fill_property = comparison;
     map_handler.animate_to_year(year);
-    $("#selected-comparison .text").text(comparison);
+    $("#selected-comparison .text").text($(this).text());
     $(".dropdown").removeClass("open");
     return false;
   });
