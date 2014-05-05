@@ -190,7 +190,7 @@ map_handler = {
 
       });
   },
-  animate_to_year : function (year){
+  animate_to_year : function (year) {
     map_handler.current_year = year;
     var arr = map_handler.metro_collection;
     for (var i=0; i < arr.length; i++) {
@@ -264,6 +264,7 @@ map_handler = {
         map_handler.chart.load({
             columns: generateColumns()
         });
+        $(".c3-legend-item-Housing-Units-Per-Capita").find('text').text($("#selected-comparison").text().trim())
       }, timeout);
 
     }
