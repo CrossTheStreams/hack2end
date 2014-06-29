@@ -20,3 +20,15 @@
   width:200px;
   float:right;
 }
+#slider {
+  margin-bottom: 35px;
+}
+ul.nav.navbar-nav {
+  min-width: 239px;
+  max-width: 245px;
+  margin: auto;
+  float: none;
+}
+.navbar-nav>li {
+  float: none !important;
+}

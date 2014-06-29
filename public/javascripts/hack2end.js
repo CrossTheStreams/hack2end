@@ -41,10 +41,10 @@ Metro = {
   update_radius : function () {
     // average total homeless across years is a little over 10 per 1000 
         value = this.data[this.current_year][this.radius_property];
-    console.log(value);
+    //console.log(value);
     // TODO: calculations for other variables
     this.radius = value * 30000.00; 
-    console.log(this.radius);
+    //console.log(this.radius);
     return this.radius;
   },
   update_fill_opacity: function() { 
@@ -119,8 +119,21 @@ $(document).ready(function() {
     return false;
   });
 
-});
+  $( "#slider" ).slider({
+    value: 2007,
+    min: 2007,
+    max: 2013,
+    step: 1,
+    slide: function( event, ui ) {
+      console.log(ui.value);
+    }
+  }).slider("pips");
 
+  //map_handler.slider = $("#slider").slider({ max: 20 , value: 10 });
+
+
+
+});
 
 map_handler = {
   fill_property : "total_beds_per_1000_pop",
@@ -252,17 +265,12 @@ map_handler = {
         map_handler.metro_collection[d.x].highlight_circle()
       })
 
-      //d3.selectAll('rect').on('mouseout',function(d){  
-        ////console.log(map_handler.chart_id_collection[d.x]);
-        //map_handler.metro_collection[d.x].set_layer_colors();
-      //})
-
 
     } else {
 
       setTimeout(function () {
         map_handler.chart.load({
-            columns: generateColumns()
+          columns: generateColumns()
         });
         $(".c3-legend-item-Housing-Units-Per-Capita").find('text').text($("#selected-comparison").text().trim())
       }, timeout);
