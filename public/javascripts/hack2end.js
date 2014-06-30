@@ -100,15 +100,6 @@ $(document).ready(function() {
     window.open("http://www.cehkc.org/", '_blank'); 
   });
 
-  $("#years a").on("click", function(){
-    var year = $(this).attr("data-year");
-
-    $("#selected-year .text").text(year);
-    $(this).attr("data-year");
-    $(".dropdown").removeClass("open");
-    return false;
-  });
-
   $("#comparisons a").on("click", function(){
     var year = map_handler.current_year;
     var comparison = $(this).attr("data-comparison");
@@ -130,8 +121,6 @@ $(document).ready(function() {
   }).slider("pips", {rest: "label" });
 
   //map_handler.slider = $("#slider").slider({ max: 20 , value: 10 });
-
-
 
 });
 
