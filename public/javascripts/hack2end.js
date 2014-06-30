@@ -102,7 +102,7 @@ $(document).ready(function() {
 
   $("#years a").on("click", function(){
     var year = $(this).attr("data-year");
-    map_handler.animate_to_year(year);
+
     $("#selected-year .text").text(year);
     $(this).attr("data-year");
     $(".dropdown").removeClass("open");
@@ -125,9 +125,9 @@ $(document).ready(function() {
     max: 2013,
     step: 1,
     slide: function( event, ui ) {
-      console.log(ui.value);
+      map_handler.animate_to_year(ui.value.toString());
     }
-  }).slider("pips");
+  }).slider("pips", {rest: "label" });
 
   //map_handler.slider = $("#slider").slider({ max: 20 , value: 10 });
 

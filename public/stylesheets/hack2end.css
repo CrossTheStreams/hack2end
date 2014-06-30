@@ -22,6 +22,8 @@
 }
 #slider {
   margin-bottom: 35px;
+  cursor: pointer;
+  max-width: 97%;
 }
 ul.nav.navbar-nav {
   min-width: 239px;
